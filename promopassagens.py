@@ -58,7 +58,7 @@ def blocklist(tweet):
     return False
 
 def get_img(url):
-    response = requests.get(url)
+    response = requests.get(url, headers = {'User-agent': 'Mozilla/5.1'})
     html = BeautifulSoup(response.content, 'html.parser')
     img = html.find('meta', {'property': 'og:image'})
     if not img:
