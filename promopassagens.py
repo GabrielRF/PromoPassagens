@@ -106,11 +106,9 @@ if __name__ == '__main__':
                 tweet_img = ''
             hashtags = cities_hashtags(tweet_text.title())
             if len(tweet_urls) > 2:
-                if len(tweet_img) > 2:
-                    tweet_img = '<a href="' + tweet_img + '">.</a>'
                 if len(tweet_img) < 2:
                     preview, tweet_img = get_img(tweet_urls)
-                message = ('<b>' + tweet_text.strip().title() + '</b>' + tweet_img)
+                message = ('<b>' + tweet_text.strip().title() + '</b>')
                 if len(hashtags)>2:
                     message = message + hashtags
                 tweet_url = f'https://twitter.com/{timeline[index].user.screen_name}/status/{timeline[index].id}'
