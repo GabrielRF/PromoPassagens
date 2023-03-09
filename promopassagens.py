@@ -110,7 +110,6 @@ if __name__ == '__main__':
                     tweet_img = '<a href="' + tweet_img + '">.</a>'
                 if len(tweet_img) < 2:
                     preview, tweet_img = get_img(tweet_urls)
-                    tweet_img = '<a href="' + tweet_img + '">.</a>'
                 message = ('<b>' + tweet_text.strip().title() + '</b>' + tweet_img)
                 if len(hashtags)>2:
                     message = message + hashtags
