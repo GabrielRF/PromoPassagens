@@ -121,5 +121,6 @@ if __name__ == '__main__':
                     bot.send_photo(f'@{DESTINATION}', tweet_img, caption=message, parse_mode='HTML', reply_markup=btn_link)
                 else:
                     bot.send_message(f'@{DESTINATION}', message, parse_mode='HTML', disable_web_page_preview=preview, reply_markup=btn_link)
-    except:
+    except Exception as error:
+        print("--- Exception ---\n", error) # An exception occurred: division by zero
         pass
