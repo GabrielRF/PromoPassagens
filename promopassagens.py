@@ -11,16 +11,10 @@ import urllib
 
 DESTINATION = os.environ['DESTINATION']
 BOT_TOKEN = os.environ['BOT_TOKEN']
-TWITTER_CONSUMER_KEY = os.environ['TWITTER_CONSUMER_KEY']
-TWITTER_CONSUMER_SECRET = os.environ['TWITTER_CONSUMER_SECRET']
-TWITTER_ACCESS_TOKEN = os.environ['TWITTER_ACCESS_TOKEN']
-TWITTER_ACCESS_SECRET = os.environ['TWITTER_ACCESS_SECRET']
-TWITTER_SLUG = os.environ['TWITTER_SLUG']
-TWITTER_OWNER = os.environ['TWITTER_OWNER']
+TWITTER_BEARER_TOKEN = os.environ['TWITTER_BEARER_TOKEN']
+TWITTER_LIST_ID = os.environ['TWITTER_LIST_ID']
 
-auth = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
-auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_SECRET)
-api = tweepy.API(auth)
+client = tweepy.Client(bearer_token=TWITTER_BEARER_TOKEN)
 bot = telebot.TeleBot(BOT_TOKEN)
 
 emoji = [str(u'\U0001F30D'), str(u'\U0001F30E'), str(u'\U0001F30F'), str(u'\U00002708'), str(u'\U0001F680'), str(u'\U0001F4A5'), str(u'\U0001F5FB'), str(u'\U0001F5FC'), str(u'\U0001F5FD'), str(u'\U0001F310')]
@@ -77,16 +71,11 @@ def remove_urls(tweet):
 
 if __name__ == '__main__':
     try:
-        timeline = api.list_timeline(slug=TWITTER_SLUG,
-            owner_screen_name=TWITTER_OWNER,
-            include_rts='false',
-            include_entities='true',
-            tweet_mode='extended',
-            count=5)
+        timeline = client.get_list_tweets(TWITTER_LIST_ID)
         for index in reversed(range(len(timeline))):
             btn_link = types.InlineKeyboardMarkup()
             preview = True
-            tweet_text = remove_urls(timeline[index].full_text)
+            tweet_text = remove_urls(timeline[index].text)
             if blocklist(tweet_text):
                 break
             for word in tweet_text.split():
