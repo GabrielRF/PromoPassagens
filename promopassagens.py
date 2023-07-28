@@ -9,10 +9,10 @@ import telebot
 import tweepy
 import urllib
 
-DESTINATION = os.environ['DESTINATION']
-BOT_TOKEN = os.environ['BOT_TOKEN']
-TWITTER_BEARER_TOKEN = os.environ['TWITTER_BEARER_TOKEN']
-TWITTER_LIST_ID = os.environ['TWITTER_LIST_ID']
+DESTINATION = os.environ.get('DESTINATION')
+BOT_TOKEN = os.environ.get('BOT_TOKEN')
+TWITTER_BEARER_TOKEN = os.environ.get('TWITTER_BEARER_TOKEN')
+TWITTER_LIST_ID = os.environ.get('TWITTER_LIST_ID')
 
 client = tweepy.Client(bearer_token=TWITTER_BEARER_TOKEN)
 bot = telebot.TeleBot(BOT_TOKEN)
