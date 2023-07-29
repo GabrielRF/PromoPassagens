@@ -9,10 +9,17 @@ import telebot
 import tweepy
 import urllib
 
-DESTINATION = os.environ.get('DESTINATION')
-BOT_TOKEN = os.environ.get('BOT_TOKEN')
-TWITTER_BEARER_TOKEN = os.environ.get('TWITTER_BEARER_TOKEN')
-TWITTER_LIST_ID = os.environ.get('TWITTER_LIST_ID')
+def get_variable(variable):
+    if not os.environ.get(f'{variable}'):
+        var_file = open(f'{variable}.txt', 'r')
+        return var_file.read().replace('\n', '')
+    return os.environ.get(f'{variable}')
+
+DESTINATION = get_variable('DESTINATION')
+BOT_TOKEN = get_variable('BOT_TOKEN')
+TWITTER_BEARER_TOKEN = get_variable('TWITTER_BEARER_TOKEN')
+TWITTER_LIST_ID = get_variable('TWITTER_LIST_ID')
+print(DESTINATION)
 
 client = tweepy.Client(bearer_token=TWITTER_BEARER_TOKEN)
 bot = telebot.TeleBot(BOT_TOKEN)
@@ -58,58 +65,52 @@ def get_img(url):
     if not img:
         img = html.find('meta', {'name': 'og:image'})
     try:
-        img = img['content']
-        preview = False
+        photo = img['content']
     except TypeError:
-        img = ''
-        preview = True
-    return preview, img
+        photo = False
+    return photo
 
 def remove_urls(tweet):
     tweet = re.sub(r"(:?https?://)\S+", "", tweet)
     return tweet
 
 if __name__ == '__main__':
-    try:
-        timeline = client.get_list_tweets(TWITTER_LIST_ID)
-        for index in reversed(range(len(timeline))):
-            btn_link = types.InlineKeyboardMarkup()
-            preview = True
-            tweet_text = remove_urls(timeline[index].text)
-            if blocklist(tweet_text):
-                break
-            for word in tweet_text.split():
-                if '@' in word:
-                    tweet_text = tweet_text.replace(word, '')
-            try:
-                tweet_urls = timeline[index].entities['urls'][0]['expanded_url']
-                tweet_urls = str(clean_url(clean_url(tweet_urls)))
-            except KeyError:
-                tweet_urls = ''
-            except IndexError:
-                tweet_urls = ''
-            try:
-                tweet_img = timeline[index].entities['media'][0]['media_url']
-                preview = False
-            except KeyError:
-                tweet_img = ''
-            hashtags = cities_hashtags(tweet_text.title())
-            if len(tweet_urls) > 2:
-                if len(tweet_img) < 2:
-                    preview, tweet_img = get_img(tweet_urls)
-                message = ('<b>' + tweet_text.strip().title() + '</b>')
-                if len(hashtags)>2:
-                    message = message + hashtags
-                tweet_url = f'https://twitter.com/{timeline[index].user.screen_name}/status/{timeline[index].id}'
-                message = f'{message}<a href="{tweet_url}">.</a>\n'
-                btn = types.InlineKeyboardButton(random.choice(emoji) + ' ' + timeline[index].user.name, url=tweet_urls)
-                btn_link.row(btn)
-            print(tweet_url)
-            if new_updates(tweet_url, get_site()):
-                if not preview:
-                    bot.send_photo(f'@{DESTINATION}', tweet_img, caption=message, parse_mode='HTML', reply_markup=btn_link)
-                else:
-                    bot.send_message(f'@{DESTINATION}', message, parse_mode='HTML', disable_web_page_preview=preview, reply_markup=btn_link)
-    except Exception as error:
-        print("--- Exception ---\n", error) # An exception occurred: division by zero
-        pass
+    timeline = client.get_list_tweets(
+        TWITTER_LIST_ID,
+        max_results=10,
+        expansions=['author_id', 'attachments.media_keys'],
+        media_fields=['preview_image_url'],
+        tweet_fields=['context_annotations', 'created_at'],
+    ).data
+    for tweet in timeline:
+        print(tweet['id'])
+        urls = []
+        tweet_text = remove_urls(tweet["text"]).title()
+        if blocklist(tweet_text):
+            break
+        img_url = f'https://fxtwitter.com/Metropoles/status/{tweet["id"]}'
+        hashtags = cities_hashtags(tweet_text.title())
+        for word in tweet["text"].split():
+            if 'https' in word:
+                urls.append(word)
+        if len(urls) < 1:
+            continue
+        #try:
+        #    btn_link = urls[0]
+        #except IndexError:
+        #    btn_link = False
+        #try:
+        #    photo = urls[1]
+        #except IndexError:
+        #    photo = False
+        #if not photo and len(urls) == 1:
+        photo = get_img(urls[-1])
+        btn_link = types.InlineKeyboardMarkup()
+        btn = types.InlineKeyboardButton(random.choice(emoji) + ' Abrir post', url=urls[0])
+        btn_link.row(btn)
+        if not new_updates(urls[0], get_site()):
+            continue
+        if photo:
+            bot.send_photo(f'@{DESTINATION}', photo, caption=f'<b>{tweet_text}</b>\n{hashtags}', parse_mode='HTML', reply_markup=btn_link)
+        else:
+            bot.send_message(f'@{DESTINATION}', tweet_text, parse_mode='HTML', disable_web_page_preview=True, reply_markup=btn_link)
