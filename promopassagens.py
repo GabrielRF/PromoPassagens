@@ -77,7 +77,7 @@ def remove_urls(tweet):
 if __name__ == '__main__':
     timeline = client.get_list_tweets(
         TWITTER_LIST_ID,
-        max_results=10,
+        max_results=5,
         expansions=['author_id', 'attachments.media_keys'],
         media_fields=['preview_image_url'],
         tweet_fields=['context_annotations', 'created_at'],
