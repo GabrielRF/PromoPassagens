@@ -109,7 +109,8 @@ if __name__ == '__main__':
         btn_link.row(btn)
         if not new_updates(urls[0], get_site()):
             continue
-        if photo:
+        print(photo)
+        try:
             bot.send_photo(f'@{DESTINATION}', photo, caption=f'<b>{tweet_text}</b>\n{hashtags}', parse_mode='HTML', reply_markup=btn_link)
-        else:
+        except:
             bot.send_message(f'@{DESTINATION}', f'<b>{tweet_text}</b>\n{hashtags}', parse_mode='HTML', disable_web_page_preview=True, reply_markup=btn_link)
