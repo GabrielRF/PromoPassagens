@@ -88,7 +88,6 @@ if __name__ == '__main__':
         tweet_text = remove_urls(tweet["text"]).title()
         if blocklist(tweet_text):
             break
-        img_url = f'https://fxtwitter.com/Metropoles/status/{tweet["id"]}'
         hashtags = cities_hashtags(tweet_text.title())
         for word in tweet["text"].split():
             if 'https' in word:
@@ -99,12 +98,12 @@ if __name__ == '__main__':
         #    btn_link = urls[0]
         #except IndexError:
         #    btn_link = False
-        #try:
-        #    photo = urls[1]
-        #except IndexError:
-        #    photo = False
-        #if not photo and len(urls) == 1:
-        photo = get_img(urls[-1])
+        try:
+            photo = urls[1]
+        except IndexError:
+            photo = False
+        if not photo:
+            photo = get_img(urls[-1])
         btn_link = types.InlineKeyboardMarkup()
         btn = types.InlineKeyboardButton(random.choice(emoji) + ' Abrir post', url=urls[0])
         btn_link.row(btn)
@@ -113,4 +112,4 @@ if __name__ == '__main__':
         if photo:
             bot.send_photo(f'@{DESTINATION}', photo, caption=f'<b>{tweet_text}</b>\n{hashtags}', parse_mode='HTML', reply_markup=btn_link)
         else:
-            bot.send_message(f'@{DESTINATION}', tweet_text, parse_mode='HTML', disable_web_page_preview=True, reply_markup=btn_link)
+            bot.send_message(f'@{DESTINATION}', f'<b>{tweet_text}</b>\n{hashtags}', parse_mode='HTML', disable_web_page_preview=True, reply_markup=btn_link)
