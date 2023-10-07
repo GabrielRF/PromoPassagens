@@ -19,6 +19,9 @@ jobs:
         with:
           workflow: passagensimperdiveis.yml
           workflow_conclusion: success
+      - name: Move database
+        continue-on-error: true
+        run: mv links_history/links_history.db links_history.db
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
