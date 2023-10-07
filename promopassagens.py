@@ -62,7 +62,7 @@ def create_post(post):
     return message, btn_link
 
 def send_message(post, message, button):
-    emoji = ['✈️','🧳','🛩']
+    emoji = ['✈️','🧳','🛩','🚞','🚢','🏝','🗺','💺','🧭']
     bot = telebot.TeleBot(os.environ.get('BOT_TOKEN'))
     bot.send_photo(
         os.environ.get('DESTINATION'),
