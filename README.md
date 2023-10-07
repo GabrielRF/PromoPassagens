@@ -8,7 +8,7 @@ Defina as variáveis na aba `Secrets` do repositório:
 
 `BOT_TOKEN`: Token do bot que enviará as mensagens no canal. Fornecido pelo [@BotFather](https://t.me/BotFather);
 
-`DESTINATION`: Canal público que receberá as mensagens. Exemplo: `PromoPassagens` (não use `@`!);
+`DESTINATION`: Canal público que receberá as mensagens. Exemplo: `@PromoPassagens`.
 
 ## Uso
 
