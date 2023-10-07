@@ -1,4 +1,4 @@
-name: Cron Action
+name: Melhores Destinos
 on:
   workflow_dispatch:
   schedule:
@@ -23,5 +23,4 @@ jobs:
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           DESTINATION: ${{ vars.DESTINATION }}
-          TWITTER_BEARER_TOKEN: ${{ secrets.TWITTER_BEARER_TOKEN }}
-          TWITTER_LIST_ID: ${{ vars.TWITTER_LIST_ID }}
+          URL: https://www.melhoresdestinos.com.br/feed
