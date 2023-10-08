@@ -45,7 +45,7 @@ def cities_hashtags(text):
     hashtag = ''
     city_file = open('cities.txt', 'r')
     for city in city_file.readlines():
-        if city.replace('\n','') in text:
+        if city.replace('\n','').title() in text:
             hashtag = hashtag + ' #' + city.replace('\n','').replace(' ','_').replace('.','')
     return hashtag
 
