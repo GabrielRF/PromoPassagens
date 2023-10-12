@@ -1,0 +1,41 @@
+name: Abril Viagem e Turismo
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/15 * * * *'
+
+
+jobs:
+  promopassagens:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Download artifact
+        id: download
+        continue-on-error: true
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: abrilviagemeturismo.yml
+          workflow_conclusion: success
+      - name: Move database
+        continue-on-error: true
+        run: mv links_history/links_history.db links_history.db
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+      - name: Install Requirements
+        run: pip install -r requirements.txt
+      - name: Run PromoPassagens
+        run: python promopassagens.py
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          DESTINATION: ${{ vars.DESTINATION }}
+          URL: https://viagemeturismo.abril.com.br/rss
+      - name: Upload history
+        uses: actions/upload-artifact@v3
+        with:
+          name: links_history
+          path: links_history.db
