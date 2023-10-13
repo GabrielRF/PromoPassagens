@@ -44,8 +44,8 @@ def get_post_photo(url):
 def cities_hashtags(text):
     hashtag = ''
     city_file = open('cities.txt', 'r')
-    for city.title() in city_file.readlines():
-        if city.replace('\n','') in text:
+    for city in city_file.readlines():
+        if city.replace('\n','').title() in text:
             hashtag = hashtag + ' #' + city.replace('\n','').replace(' ','_').replace('.','')
     return hashtag
 
@@ -80,7 +80,7 @@ def get_feed(url):
         post['link'] = pst.links[0].href
         if in_history(post['link']):
             continue
-        post['title'] = pst.title.strip()
+        post['title'] = pst.title.strip().title()
         if blocklist(post['title']):
             continue
         post['photo'] = get_post_photo(post['link'])
