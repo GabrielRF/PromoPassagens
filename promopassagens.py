@@ -88,7 +88,7 @@ def get_feed(url):
         try:
             send_message(post, message, button)
         except Exception as e:
-            print(e)
+            print(f'Link: {pst.links[0].href}\nErro: {e}')
         add_to_history(post['link'])
 
 if __name__ == "__main__":
