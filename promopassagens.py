@@ -85,7 +85,10 @@ def get_feed(url):
             continue
         post['photo'] = get_post_photo(post['link'])
         message, button = create_post(post)
-        send_message(post, message, button)
+        try:
+            send_message(post, message, button)
+        except Exception as e:
+            print(e)
         add_to_history(post['link'])
 
 if __name__ == "__main__":
