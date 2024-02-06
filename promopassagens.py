@@ -83,7 +83,10 @@ def get_feed(url):
         post['title'] = pst.title.strip().title()
         if blocklist(post['title']):
             continue
-        post['photo'] = get_post_photo(post['link'])
+        try:
+            post['photo'] = get_post_photo(post['link'])
+        except:
+            continue
         message, button = create_post(post)
         try:
             send_message(post, message, button)
