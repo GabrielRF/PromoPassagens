@@ -61,16 +61,27 @@ def create_post(post):
     btn_link.row(btn)
     return message, btn_link
 
+def add_reaction(msg):
+    reactions = ['👍','❤️','🔥','🥰','👏','🤯','🤩']
+    react = random.choice(reactions)
+    bot = telebot.TeleBot(os.environ.get('BOT_TOKEN'))
+    bot.set_message_reaction(
+        msg.chat.id,
+        msg.message_id,
+        [telebot.types.ReactionTypeEmoji(react)]
+    )
+
 def send_message(post, message, button):
     emoji = ['✈️','🧳','🛩','🚞','🚢','🏝','🗺','💺','🧭']
     bot = telebot.TeleBot(os.environ.get('BOT_TOKEN'))
-    bot.send_photo(
+    msg = bot.send_photo(
         os.environ.get('DESTINATION'),
         post['photo'],
         caption=f'{random.choice(emoji)} {message.title()}',
         parse_mode='HTML',
         reply_markup=button
     )
+    add_reaction(msg)
 
 def get_feed(url):
     feed = feedparser.parse(url)
