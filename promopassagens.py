@@ -73,15 +73,16 @@ def add_reaction(msg):
     )
 
 def send_bluesky(post):
-    emoji = ['✈️','🧳','🛩','🚞','🚢','🏝','🗺','💺','🧭']
+    emoji = ['✈️','🧳','🛩 ','🚞','🚢','🏝 ','🗺 ','💺','🧭']
     client = Client(base_url='https://bsky.social')
     client.login('promopassagens.grf.xyz', os.environ.get('BLUESKY_PASSWORD'))
 
     request = requests.get(post['photo'], stream=True)
-    with open('image.png', 'wb') as image:
+    file_name = f'{post["photo"].split("/")[-1].split("?")[0]}'
+    with open(file_name, 'wb') as image:
         for chunk in request:
             image.write(chunk)
-    with open ('image.png', 'rb') as f:
+    with open (file_name, 'rb') as f:
         image_data = f.read()
 
     text_builder = client_utils.TextBuilder()
@@ -93,8 +94,9 @@ def send_bluesky(post):
     client.send_image(
         text=text_builder,
         image=image_data,
-        image_alt='promopassagens.grf.xyz',
+        image_alt=post['title'],
     )
+    os.remove(file_name)
 
 def send_message(post, message, button):
     emoji = ['✈️','🧳','🛩','🚞','🚢','🏝','🗺','💺','🧭']
