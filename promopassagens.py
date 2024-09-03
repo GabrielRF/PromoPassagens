@@ -4,6 +4,7 @@ import random
 import requests
 import sqlite3
 import telebot
+from atproto import Client, client_utils
 from bs4 import BeautifulSoup
 from telebot import types
 
@@ -71,6 +72,30 @@ def add_reaction(msg):
         [telebot.types.ReactionTypeEmoji(react)]
     )
 
+def send_bluesky(post):
+    emoji = ['✈️','🧳','🛩','🚞','🚢','🏝','🗺','💺','🧭']
+    client = Client(base_url='https://bsky.social')
+    client.login('promopassagens.grf.xyz', os.environ.get('BLUESKY_PASSWORD'))
+
+    request = requests.get(post['photo'], stream=True)
+    with open('image.png', 'wb') as image:
+        for chunk in request:
+            image.write(chunk)
+    with open ('image.png', 'rb') as f:
+        image_data = f.read()
+
+    text_builder = client_utils.TextBuilder()
+    text_builder.link(
+        f'{random.choice(emoji)} {post["author"]}\n{post["title"]}',
+        post["link"]
+    )
+
+    client.send_image(
+        text=text_builder,
+        image=image_data,
+        image_alt='promopassagens.grf.xyz',
+    )
+
 def send_message(post, message, button):
     emoji = ['✈️','🧳','🛩','🚞','🚢','🏝','🗺','💺','🧭']
     bot = telebot.TeleBot(os.environ.get('BOT_TOKEN'))
@@ -103,6 +128,10 @@ def get_feed(url):
             send_message(post, message, button)
         except Exception as e:
             print(f'Link: {pst.links[0].href}\nErro: {e}')
+        try:
+            send_bluesky(post)
+        except:
+            pass
         add_to_history(post['link'])
 
 if __name__ == "__main__":
