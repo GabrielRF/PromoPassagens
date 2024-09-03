@@ -34,6 +34,7 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           DESTINATION: ${{ vars.DESTINATION }}
           URL: https://www.passagensimperdiveis.com.br/feed/ 
+          BLUESKY_PASSWORD: ${{ secrets.BLUESKY_PASSWORD }}
       - name: Upload history
         uses: actions/upload-artifact@v3
         with:
