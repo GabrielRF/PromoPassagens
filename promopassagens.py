@@ -79,6 +79,7 @@ def send_bluesky(post):
 
     request = requests.get(post['photo'], stream=True)
     file_name = f'{post["photo"].split("/")[-1].split("?")[0]}'
+    print(file_name)
     with open(file_name, 'wb') as image:
         for chunk in request:
             image.write(chunk)
