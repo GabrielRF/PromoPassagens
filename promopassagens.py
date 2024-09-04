@@ -4,6 +4,7 @@ import random
 import requests
 import sqlite3
 import telebot
+import urllib
 from atproto import Client, client_utils
 from bs4 import BeautifulSoup
 from telebot import types
@@ -77,14 +78,9 @@ def send_bluesky(post):
     client = Client(base_url='https://bsky.social')
     client.login('promopassagens.grf.xyz', os.environ.get('BLUESKY_PASSWORD'))
 
-    request = requests.get(post['photo'], stream=True)
-    file_name = f'{post["photo"].split("/")[-1].split("?")[0]}'
-    print(file_name)
-    with open(file_name, 'wb') as image:
-        for chunk in request:
-            image.write(chunk)
-    with open (file_name, 'rb') as f:
-        image_data = f.read()
+    file_name, headers = urllib.request.urlretrieve(
+        post["photo"], post["photo"].split("/")[-1]
+    )
 
     text_builder = client_utils.TextBuilder()
     text_builder.link(
