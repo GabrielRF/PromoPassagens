@@ -88,11 +88,17 @@ def send_bluesky(post):
         post["link"]
     )
 
-    client.send_image(
-        text=text_builder,
-        image=image_data,
-        image_alt=post['title'],
-    )
+    try:
+        client.send_image(
+            text=text_builder,
+            image=image_data,
+            image_alt=post['title'],
+        )
+    except:
+        client.send_post(
+            text_builder
+        )
+
     os.remove(file_name)
 
 def send_message(post, message, button):
