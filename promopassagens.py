@@ -2,9 +2,9 @@ import feedparser
 import os
 import random
 import requests
+import shutil
 import sqlite3
 import telebot
-import urllib
 from atproto import Client, client_utils
 from bs4 import BeautifulSoup
 from telebot import types
@@ -78,31 +78,29 @@ def send_bluesky(post):
     client = Client(base_url='https://bsky.social')
     client.login('promopassagens.grf.xyz', os.environ.get('BLUESKY_PASSWORD'))
 
-    file_name, headers = urllib.request.urlretrieve(
-        post["photo"], post["photo"].split("/")[-1]
-    )
-
     text_builder = client_utils.TextBuilder()
     text_builder.link(
         f'{random.choice(emoji)} {post["author"]}\n{post["title"]}',
         post["link"]
     )
 
-    with open (file_name, 'rb') as f:
-        image_data = f.read()
-
     try:
+        file_name = post["photo"].split("/")[-1]
+        with requests.get(post["photo"], stream=True) as r:
+            with open(post["photo"].split("/")[-1], 'wb') as f:
+                shutil.copyfileobj(r.raw, f)
+        with open (file_name, 'rb') as f:
+            image_data = f.read()
         client.send_image(
             text=text_builder,
             image=image_data,
             image_alt=post['title'],
         )
+        os.remove(file_name)
     except:
         client.send_post(
             text_builder
         )
-
-    os.remove(file_name)
 
 def send_message(post, message, button):
     emoji = ['✈️','🧳','🛩','🚞','🚢','🏝','🗺','💺','🧭']
