@@ -88,6 +88,9 @@ def send_bluesky(post):
         post["link"]
     )
 
+    with open (file_name, 'rb') as f:
+        image_data = f.read()
+
     try:
         client.send_image(
             text=text_builder,
