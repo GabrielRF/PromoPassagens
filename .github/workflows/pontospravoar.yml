@@ -1,4 +1,4 @@
-name: G1 Turismo e Viagem
+name: Pontos pra Voar
 on:
   workflow_dispatch:
   schedule:
@@ -17,7 +17,7 @@ jobs:
         continue-on-error: true
         uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: g1turismoeviagem.yml
+          workflow: pontospravoar.yml
           workflow_conclusion: success
       - name: Move database
         continue-on-error: true
@@ -33,7 +33,7 @@ jobs:
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           DESTINATION: ${{ vars.DESTINATION }}
-          URL: https://g1.globo.com/rss/g1/turismo-e-viagem/
+          URL: https://pontospravoar.com/rss
           BLUESKY_PASSWORD: ${{ secrets.BLUESKY_PASSWORD }}
       - name: Upload history
         uses: actions/upload-artifact@v4

@@ -36,7 +36,7 @@ jobs:
           URL: https://passageirodeprimeira.com/feed/
           BLUESKY_PASSWORD: ${{ secrets.BLUESKY_PASSWORD }}
       - name: Upload history
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: links_history
           path: links_history.db
