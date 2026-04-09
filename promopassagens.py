@@ -1,5 +1,6 @@
 import feedparser
 import os
+import sys
 import random
 import requests
 import shutil
@@ -141,4 +142,11 @@ def get_feed(url):
         add_to_history(post['link'])
 
 if __name__ == "__main__":
-    get_feed(os.environ.get('URL'))
+    #get_feed(sys.argv[1])
+    get_feed('https://viagemeturismo.abril.com.br/rss')
+    get_feed('https://g1.globo.com/rss/g1/turismo-e-viagem/')
+    get_feed('https://www.melhorescartoes.com.br/feed/rss')
+    get_feed('https://www.melhoresdestinos.com.br/feed')
+    get_feed('https://passageirodeprimeira.com/feed/')
+    get_feed('https://www.passagensimperdiveis.com.br/feed/')
+    get_feed('https://pontospravoar.com/rss')

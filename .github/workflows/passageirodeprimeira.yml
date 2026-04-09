@@ -1,8 +1,8 @@
 name: Passageiro de Primeira
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '*/15 * * * *'
+#  schedule:
+#    - cron: '*/15 * * * *'
 
 
 jobs:
