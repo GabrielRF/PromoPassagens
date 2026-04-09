@@ -112,7 +112,7 @@ def send_message(post, message, button):
         parse_mode='HTML',
         reply_markup=button
     )
-    add_reaction(msg)
+    # add_reaction(msg)
 
 def get_feed(url):
     feed = feedparser.parse(url)
